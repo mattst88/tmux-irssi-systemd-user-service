@@ -1,0 +1,26 @@
+[Unit]
+Description=irssi (in tmux)
+Documentation=man:irssi(1)
+Requires=nss-lookup.target
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Service]
+Type=forking
+TimeoutSec=5
+WorkingDirectory=~
+Environment=WIDTH=80 HEIGHT=24
+EnvironmentFile=-%E/tmux-irssi.env
+ExecStart=/bin/sh -c '/usr/bin/tmux -L %p -2 new-session -A -d -x ${WIDTH} -y ${HEIGHT} -s irssi /usr/bin/irssi'
+
+# Send CTRL+u to clear the input line before /quit
+ExecStop=-/usr/bin/tmux -L %p send-keys -t irssi:0 C-u
+ExecStop=-/usr/bin/tmux -L %p send-keys -t irssi:0 "/quit" Enter
+
+# Sending /quit to irssi is asynchronous, so wait for irssi to exit
+# before killing the session in tmux
+ExecStop=/bin/sh -c '/usr/bin/timeout 3 /usr/bin/tail --pid=$(/bin/cat %t/irssi.pid || echo 0) -f /dev/null'
+ExecStop=-/usr/bin/tmux -L %p kill-session -t irssi
+
+[Install]
+WantedBy=default.target
