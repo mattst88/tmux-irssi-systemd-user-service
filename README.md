@@ -18,12 +18,14 @@ I want irssi to start and stop cleanly on system reboot, which means starting up
 
 ## Installation
 
-After installing the files, just enable the service:
+After installing the files, enable "Lingering" and enable the service itself:
 
 ```sh
+$ loginctl enable-linger $(whoami)
 $ systemctl --user daemon-reload
 $ systemctl --user enable --now irssi
 ```
+
 
 The you can connect to tmux with
 
