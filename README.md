@@ -14,7 +14,6 @@ I want irssi to start and stop cleanly on system reboot, which means starting up
 
 * `irssi.service`: systemd user service. Install to `/etc/systemd/user/`
 * `tmux-irssi.env`: optional environment file. Install to `~/.config/`
-* `pid.pl`: irssi script to write a pid file. Install to `~/.irssi/scripts/` (and symlink in `~/.irssi/scripts/autorun/`)
 
 ## Installation
 
